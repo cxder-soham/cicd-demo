@@ -1,0 +1,13 @@
+simple-cicd-demo/
+├── .github/
+│   └── workflows/
+│       └── main.yml
+├── src/
+│   ├── app.js
+│   └── app.test.js
+├── Dockerfile
+├── docker-compose.yml
+├── package.json
+├── .dockerignore
+├── .gitignore
+└── README.md

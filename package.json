@@ -1,0 +1,28 @@
+{
+    "name": "cicd-demo-app",
+    "version": "1.0.0",
+    "description": "A simple application to demonstrate CI/CD pipelines",
+    "main": "src/app.js",
+    "scripts": {
+      "start": "node src/app.js",
+      "dev": "nodemon src/app.js",
+      "test": "jest",
+      "test:ci": "jest --ci --coverage"
+    },
+    "keywords": [
+      "cicd",
+      "devops",
+      "docker",
+      "github-actions"
+    ],
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+      "express": "^4.18.2"
+    },
+    "devDependencies": {
+      "jest": "^29.5.0",
+      "nodemon": "^2.0.22",
+      "supertest": "^6.3.3"
+    }
+  }

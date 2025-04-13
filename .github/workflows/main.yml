@@ -1,0 +1,94 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run tests
+        run: npm run test:ci
+        
+      - name: Upload test coverage
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage
+          path: coverage/
+  
+  build:
+    name: Build and Push Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: false
+          load: true
+          tags: cicd-demo-app:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Test Docker image
+        run: |
+          docker run --name test-container -d -p 3000:3000 cicd-demo-app:latest
+          sleep 5
+          curl -s http://localhost:3000/health | grep "healthy" || exit 1
+          docker stop test-container
+      
+      # Uncomment the following steps when you're ready to push to a registry
+      # - name: Login to Docker Hub
+      #   if: github.ref == 'refs/heads/main'
+      #   uses: docker/login-action@v2
+      #   with:
+      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
+      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      # - name: Push Docker image
+      #   if: github.ref == 'refs/heads/main'
+      #   uses: docker/build-push-action@v4
+      #   with:
+      #     context: .
+      #     push: true
+      #     tags: yourusername/cicd-demo-app:latest
+      #     cache-from: type=gha
+      #     cache-to: type=gha,mode=max
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    # This is a placeholder for your actual deployment
+    # The implementation will depend on your target platform
+    steps:
+      - name: Deploy to Production (Example)
+        run: |
+          echo "Deploying to production..."
+          echo "In a real scenario, you would use actions to deploy to your target platform"
+          # Examples:
+          # - Deploy to Heroku: uses: akhileshns/heroku-deploy@v3
+          # - Deploy to AWS: uses: aws-actions/configure-aws-credentials@v1
+          # - Deploy to Azure: uses: azure/webapps-deploy@v2
