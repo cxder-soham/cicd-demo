@@ -1,4 +1,3 @@
-```markdown
 # CI/CD Demo Application
 
 A simple Node.js application with CI/CD pipeline implementation using GitHub Actions and Docker.
@@ -53,4 +52,3 @@ This project demonstrates a complete CI/CD pipeline:
 ## License
 
 MIT
-```
