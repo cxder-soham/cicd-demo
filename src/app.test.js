@@ -13,4 +13,13 @@ describe('API Tests', () => {
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty('status', 'healthy');
   });
+
+  // Added this test for the new endpoint
+test('GET /api/status should return service information', async () => {
+    const response = await request(app).get('/api/status');
+    expect(response.statusCode).toBe(200);
+    expect(response.body).toHaveProperty('service', 'cicd-demo-app');
+    expect(response.body).toHaveProperty('version');
+    expect(response.body).toHaveProperty('uptime');
+  });
 });

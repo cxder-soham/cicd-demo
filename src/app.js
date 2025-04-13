@@ -15,6 +15,16 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy' });
 });
 
+// Added this new endpoint
+app.get('/api/status', (req, res) => {
+    res.json({
+      service: 'cicd-demo-app',
+      version: '1.0.0',
+      uptime: process.uptime(),
+      date: new Date()
+    });
+  });
+
 // Only start the server if this file is run directly
 if (require.main === module) {
   app.listen(port, () => {
